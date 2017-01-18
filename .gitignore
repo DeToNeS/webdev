@@ -1,5 +1,9 @@
 # PHP Storm
-/.idea/*
+/.idea/deployment.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/webdev.iml
+/.idea/workspace.xml
 
 # logs
 logs
