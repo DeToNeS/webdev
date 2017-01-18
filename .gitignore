@@ -1,12 +1,18 @@
+############################
 # PHP Storm
-/.idea/deployment.xml
-/.idea/modules.xml
-/.idea/vcs.xml
-/.idea/webdev.iml
-/.idea/workspace.xml
+############################
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
 
+############################
 # logs
+############################
 logs
 
-# docker-compose produção
+############################
+# PRODUÇÃO
+############################
 docker-compose.yml
