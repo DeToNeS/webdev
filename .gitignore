@@ -5,4 +5,4 @@
 logs
 
 # docker-compose produção
-./docker-compose.yml
+docker-compose.yml
