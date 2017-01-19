@@ -49,6 +49,32 @@ RUN apt-get update \
   && apt-get install -y build-essential memcached php-pear \
   && yes | pecl install memcached
 
+###############################################################################
+# Composer
+###############################################################################
+
+WORKDIR /tmp
+
+RUN apt-get update -y && \
+    apt-get install -y curl git php5-mcrypt && \
+    curl -sS https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer && \
+    composer self-update && \
+    apt-get remove --purge curl -y && \
+    apt-get clean
+
+###############################################################################
+# EXTRAS
+###############################################################################
+
+RUN rm /root/.bashrc
+
+COPY .bashrc /root/.bashrc
+
+COPY .bash_aliases /root/.bash_aliases
+
+RUN /bin/bash ~/.bashrc
+
 WORKDIR /var/www
 
 EXPOSE 80 443 9000

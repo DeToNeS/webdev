@@ -7,7 +7,7 @@ services:
     applications:
         image: detones/webdev:latest
         volumes:
-            - C:\www\site\site\simposio/:/var/www
+            - C:\www\/:/var/www
         extra_hosts:
             - "dockerhost:10.0.75.1"
 

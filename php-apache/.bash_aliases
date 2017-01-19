@@ -1,0 +1,1 @@
+alias busca='find . -path ./.svn -prune -o -type f | xargs grep -sFn '
