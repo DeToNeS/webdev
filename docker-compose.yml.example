@@ -5,7 +5,7 @@ services:
 ### webdev
 ###############################################################################
     applications:
-        image: detones/webdev:lastest
+        image: detones/webdev:latest
         volumes:
             - C:\www\site\site\simposio/:/var/www
         extra_hosts:
