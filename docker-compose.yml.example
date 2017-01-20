@@ -7,7 +7,8 @@ services:
     applications:
         image: detones/webdev:latest
         volumes:
-            - C:\www\/:/var/www
+# PASTA COM PROJETO
+#            - c:\www\/:/var/www
         extra_hosts:
             - "dockerhost:10.0.75.1"
 
