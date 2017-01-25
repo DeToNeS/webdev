@@ -7,8 +7,7 @@ services:
     applications:
         image: detones/webdev:latest
         volumes:
-# PASTA COM PROJETO
-#            - c:\www\/:/var/www
+            - c:\/:/var/www
         extra_hosts:
             - "dockerhost:10.0.75.1"
 
@@ -18,6 +17,11 @@ services:
     php-apache:
         build:
             context: ./php-apache
+            args:
+                - DOCUMENT_ROOT=/var/www/public
+                - SERVER_NAME=localhost
+                - SERVER_ALIAS=localhost
+                - SERVER_ADMIN=email@email.com
         volumes_from:
             - applications
         volumes:

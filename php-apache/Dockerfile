@@ -1,10 +1,33 @@
 FROM php:5.6-apache
 
-COPY ./conf/* ${APACHE_CONFDIR}/sites-available/
+COPY ./vhost.conf ${APACHE_CONFDIR}/sites-available/
 
 RUN a2ensite *.conf
 
 RUN a2enmod rewrite
+
+ARG DOCUMENT_ROOT=/var/www/public
+ARG SERVER_NAME=localhost
+ARG SERVER_ALIAS=localhost
+ARG SERVER_ADMIN=email@email.com
+
+ENV DOCUMENT_ROOT=${DOCUMENT_ROOT}
+ENV SERVER_NAME=${SERVER_NAME}
+ENV SERVER_ALIAS=${SERVER_ALIAS}
+ENV SERVER_ADMIN=${SERVER_ADMIN}
+
+RUN export DOCUMENT_ROOT=${DOCUMENT_ROOT}
+RUN export SERVER_NAME=${SERVER_NAME}
+RUN export SERVER_ALIAS=${SERVER_ALIAS}
+RUN export SERVER_ADMIN=${SERVER_ADMIN}
+
+
+#RUN sed -i ${DOCUMENT_ROOT} ${APACHE_CONFDIR}/sites-available/vhost.conf
+#RUN sed -i ${SERVER_NAME} ${APACHE_CONFDIR}/sites-available/vhost.conf
+#RUN sed -i ${SERVER_ALIAS} ${APACHE_CONFDIR}/sites-available/vhost.conf
+#RUN sed -i ${SERVER_ADMIN} ${APACHE_CONFDIR}/sites-available/vhost.conf
+
+#RUN cat ${APACHE_CONFDIR}/sites-available/vhost.conf
 
 ###############################################################################
 # PDO E MySQL
