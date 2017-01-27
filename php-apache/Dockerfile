@@ -6,28 +6,22 @@ RUN a2ensite *.conf
 
 RUN a2enmod rewrite
 
-ARG DOCUMENT_ROOT=/var/www/public
-ARG SERVER_NAME=localhost
-ARG SERVER_ALIAS=localhost
-ARG SERVER_ADMIN=email@email.com
+ARG DOCUMENT_ROOT
+ARG SERVER_NAME
+ARG SERVER_ALIAS
+ARG SERVER_ADMIN
+ARG NODE_VERSION
 
 ENV DOCUMENT_ROOT=${DOCUMENT_ROOT}
 ENV SERVER_NAME=${SERVER_NAME}
 ENV SERVER_ALIAS=${SERVER_ALIAS}
 ENV SERVER_ADMIN=${SERVER_ADMIN}
+ENV NODE_VERSION=${NODE_VERSION}
 
 RUN export DOCUMENT_ROOT=${DOCUMENT_ROOT}
 RUN export SERVER_NAME=${SERVER_NAME}
 RUN export SERVER_ALIAS=${SERVER_ALIAS}
 RUN export SERVER_ADMIN=${SERVER_ADMIN}
-
-
-#RUN sed -i ${DOCUMENT_ROOT} ${APACHE_CONFDIR}/sites-available/vhost.conf
-#RUN sed -i ${SERVER_NAME} ${APACHE_CONFDIR}/sites-available/vhost.conf
-#RUN sed -i ${SERVER_ALIAS} ${APACHE_CONFDIR}/sites-available/vhost.conf
-#RUN sed -i ${SERVER_ADMIN} ${APACHE_CONFDIR}/sites-available/vhost.conf
-
-#RUN cat ${APACHE_CONFDIR}/sites-available/vhost.conf
 
 ###############################################################################
 # PDO E MySQL
@@ -60,7 +54,7 @@ RUN yes | pecl install xdebug \
 # ZipArchive
 ###############################################################################
 RUN apt-get update \
-    && apt-get install -y zlib1g-dev \
+    && apt-get install -y zlib1g-dev apt-utils \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-install zip
 
@@ -79,24 +73,28 @@ RUN apt-get update \
 WORKDIR /tmp
 
 RUN apt-get update -y && \
-    apt-get install -y curl git php5-mcrypt && \
+    apt-get install -y curl git php5-mcrypt mc && \
     curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer && \
     composer self-update && \
-    apt-get remove --purge curl -y && \
     apt-get clean
+
+WORKDIR ~/
+
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash \
+    && . ~/.nvm/nvm.sh \
+    && . ~/.bashrc \
+    && nvm install ${NODE_VERSION} \
+    && nvm use ${NODE_VERSION} \
+    && nvm alias ${NODE_VERSION}
 
 ###############################################################################
 # EXTRAS
 ###############################################################################
 
-RUN rm /root/.bashrc
-
-COPY .bashrc /root/.bashrc
-
 COPY .bash_aliases /root/.bash_aliases
 
-RUN /bin/bash ~/.bashrc
+RUN . ~/.bashrc
 
 WORKDIR /var/www
 
