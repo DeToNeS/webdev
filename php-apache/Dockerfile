@@ -6,12 +6,19 @@ RUN a2ensite *.conf
 
 RUN a2enmod rewrite
 
+RUN a2dissite 000-default.conf \
+    default-ssl.conf
+
+RUN echo "ServerName localhost" >> ${APACHE_CONFDIR}/apache2.conf
+
+ARG TZ
 ARG DOCUMENT_ROOT
 ARG SERVER_NAME
 ARG SERVER_ALIAS
 ARG SERVER_ADMIN
 ARG NODE_VERSION
 
+ENV TZ=${TZ}
 ENV DOCUMENT_ROOT=${DOCUMENT_ROOT}
 ENV SERVER_NAME=${SERVER_NAME}
 ENV SERVER_ALIAS=${SERVER_ALIAS}
@@ -22,6 +29,11 @@ RUN export DOCUMENT_ROOT=${DOCUMENT_ROOT}
 RUN export SERVER_NAME=${SERVER_NAME}
 RUN export SERVER_ALIAS=${SERVER_ALIAS}
 RUN export SERVER_ADMIN=${SERVER_ADMIN}
+
+###############################################################################
+# AJUSTA A HORA DO SERVIDOR
+###############################################################################
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ###############################################################################
 # PDO E MySQL

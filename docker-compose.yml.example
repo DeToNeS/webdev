@@ -20,6 +20,7 @@ services:
         build:
             context: ./php-apache
             args:
+                - TZ=America/Porto_Velho
                 - DOCUMENT_ROOT=/var/www/public/
                 - SERVER_NAME=localhost
                 - SERVER_ALIAS=localhost
