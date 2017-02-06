@@ -69,10 +69,10 @@ RUN apt-get update \
     && docker-php-ext-install zip
 
 ###############################################################################
-# PHP Memcached
+# PHP Memcached / GD
 ###############################################################################
 RUN apt-get update \
-  && apt-get install -y php5-memcached \
+  && apt-get install -y php5-memcached php5-gd \
   && apt-get install -y build-essential memcached php-pear \
   && yes | pecl install memcached
 
