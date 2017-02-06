@@ -38,43 +38,53 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ###############################################################################
 # PDO E MySQL
 ###############################################################################
-RUN apt-get update && apt-get install -y libpq-dev postgresql-client \
-    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo pdo_pgsql pgsql mysql mysqli pdo_mysql sockets
+RUN apt-get update && apt-get install -y libpq-dev postgresql-client && \
+    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql && \
+    docker-php-ext-install pdo pdo_pgsql pgsql mysql mysqli pdo_mysql sockets
 
 ###############################################################################
 # xDebug
 ###############################################################################
-RUN yes | pecl install xdebug \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=0" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=0" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_connect_back=0" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.cli_color=0" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.profiler_enable=0" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_handler=dbgp" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_mode=req" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_port=9000" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_host=dockerhost" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.idekey=PHPSTORM" >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN yes | pecl install xdebug && \
+    echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.remote_autostart=0" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.remote_enable=0" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.remote_connect_back=0" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.cli_color=0" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.profiler_enable=0" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.remote_handler=dbgp" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.remote_mode=req" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.remote_port=9000" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.remote_host=dockerhost" >> /usr/local/etc/php/conf.d/xdebug.ini && \
+    echo "xdebug.idekey=PHPSTORM" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 ###############################################################################
 # ZipArchive
 ###############################################################################
-RUN apt-get update \
-    && apt-get install -y zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && docker-php-ext-install zip
+RUN apt-get update && \
+    apt-get install -y zlib1g-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    docker-php-ext-install zip
 
 ###############################################################################
 # PHP Memcached / GD
 ###############################################################################
-RUN apt-get update \
-  && apt-get install -y php5-memcached php5-gd \
-  && apt-get install -y build-essential memcached php-pear \
-  && yes | pecl install memcached
+RUN apt-get update && \
+    apt-get install -y php5-memcached && \
+    apt-get install -y build-essential memcached php-pear && \
+    yes | pecl install memcached
+
+###############################################################################
+# PHP / GD
+###############################################################################
+RUN apt-get update && \
+    apt-get install -y libfreetype6-dev libjpeg62-turbo-dev && \
+    docker-php-ext-install mysqli && \
+    docker-php-ext-install mbstring && \
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/  &&  \
+    docker-php-ext-install gd
 
 ###############################################################################
 # Composer
@@ -91,12 +101,12 @@ RUN apt-get update -y && \
 
 WORKDIR ~/
 
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash \
-    && . ~/.nvm/nvm.sh \
-    && . ~/.bashrc \
-    && nvm install ${NODE_VERSION} \
-    && nvm use ${NODE_VERSION} \
-    && nvm alias ${NODE_VERSION}
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash && \
+    . ~/.nvm/nvm.sh && \
+    . ~/.bashrc && \
+    nvm install ${NODE_VERSION} && \
+    nvm use ${NODE_VERSION} && \
+    nvm alias ${NODE_VERSION}
 
 ###############################################################################
 # EXTRAS
